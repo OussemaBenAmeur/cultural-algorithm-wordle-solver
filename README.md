@@ -1,44 +1,46 @@
 # Cultural Algorithm Wordle Solver
 
-A clean Wordle solver built around an actual cultural algorithm, not a direct hidden-word fitness trick.
+This project applies a cultural algorithm to the Wordle problem in the context of an academic Algorithms and Data Structures project.
+
+Wordle can be viewed as a constrained search problem: after each guess, the feedback narrows the set of valid solutions. This repository explores that search process through a cultural algorithm, where a population of candidate guesses evolves under the influence of a shared belief space built from accumulated knowledge.
 
 `crate ⬛🟨⬛⬛🟩 -> carol 🟩🟨⬛⬛⬛ -> cigar 🟩🟩🟩🟩🟩`
 
-## What makes it a genuine cultural algorithm
+## Objective
 
-- The population space is a changing set of candidate guesses.
-- The belief space stores shared knowledge from play: positional letter beliefs, overall letter beliefs, the current best situational guess, and the full feedback history.
-- An acceptance step keeps elite guesses from each generation.
-- A belief update step learns from those elites and from the remaining feasible answers.
-- An influence step uses that belief space to generate the next population.
+The goal is to study how ideas from evolutionary computation can be used to solve Wordle efficiently while keeping the implementation grounded in classic algorithmic concerns such as filtering, scoring, candidate reduction, and search strategy.
 
-The solver only learns through real Wordle feedback and candidate filtering. It does not score guesses by peeking at the target word.
+## Cultural Algorithm Perspective
 
-## Repository layout
+The solver is organized around the main elements of a cultural algorithm:
 
-- `cultural_wordle/`: solver package and CLI
-- `tests/`: unit tests for Wordle rules and solver behavior
+- `Population space`: candidate guesses explored at each generation
+- `Belief space`: shared knowledge extracted from feasible answers and accepted individuals
+- `Acceptance`: selection of strong individuals that are allowed to update the belief space
+- `Influence`: use of the belief space to guide the next generation of guesses
+
+Wordle feedback is represented with the usual tile states:
+
+- `🟩` correct letter in the correct position
+- `🟨` correct letter in the wrong position
+- `⬛` letter absent under Wordle’s duplicate-letter rules
+
+## Repository Structure
+
+- `cultural_wordle/`: solver implementation and command-line entry point
+- `tests/`: rule and solver verification
 - `short-list-of-words.txt`: answer list
 - `long-list-of-words.txt`: allowed guess list
 - `worlde-solver.ipynb`: original notebook prototype
 
-## Run it
+## Run
 
 ```bash
 python3 -m cultural_wordle --answer jazzy
 ```
 
-## Test it
+## Test
 
 ```bash
 python3 -m unittest -v
 ```
-
-## Verification
-
-- Unit tests cover duplicate-letter feedback, candidate filtering, and deterministic solver behavior.
-- An exhaustive benchmark over all 1,625 answers solved 1,625/1,625 targets with an average of 3.387 guesses and a worst case of 6 guesses.
-
-## Notes
-
-The notebook remains in the repo as the original prototype. The maintained implementation is the Python package.
